@@ -2,12 +2,14 @@
 session_start();
 
 @$username = $_POST["username"];
-@$motDePasse =  $_POST["mdp"];
+@$motDePasse =  password_hash($_POST["mdp"], PASSWORD_DEFAULT);
 @$valider =  $_POST["valider"];
 $erreur = '';
 
+
+
 if (isset($valider)) {
-    if ($username == 'admin' && $motDePasse == 'admin') {
+    if ($username == 'admin' && password_verify('admin', $motDePasse)) {
         $_SESSION['autoriser'] = "oui";
         header('Location: http://localhost/Exo_Sessions/bre01-php-j6/secret.php');
     } else {
@@ -15,11 +17,11 @@ if (isset($valider)) {
     }
 }
 
-var_dump($erreur);
 
 
 
-var_dump($_POST);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -34,11 +36,11 @@ var_dump($_POST);
 <body>
 
 
-    <form action="" method="POST" autocomplete="off">
+    <form action="" method="POST" name="form_<?php echo uniqid(); ?> autocomplete=" off">
         <label for="username">Username</label>
         <input type="text" name="username" id="username" value="<?php echo $username ?>">
         <label for="mdp">Mot de passe</label>
-        <input type="password" name="mdp" id="mdp" value="<?php echo $motDePasse ?>" autocomplete="new-password">
+        <input type="password" name="mdp" id="mdp" value="" autocomplete="new-password">
         <button type="submit" name="valider">Se connecter</button>
     </form>
     <?php if (!empty($erreur)) : ?>
